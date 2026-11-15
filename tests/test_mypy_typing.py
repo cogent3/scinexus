@@ -178,3 +178,29 @@ def test_mypy_inheritance_reveal_type(tmp_path):
     _, output = _run_mypy(code, tmp_path)
     # Should see str (or Union[str, NotCompleted]) — not Any
     assert "str" in output
+
+
+def test_mypy_deprecated_args_keeps_signature(tmp_path):
+    code = textwrap.dedent("""\
+        from scinexus.warning import deprecated_args
+
+        @deprecated_args(version="2027.4", reason="r", old_new=[("z", "y")])
+        def with_args(x: int, *, y: str = "") -> list[int]:
+            return [x]
+
+        class Thing:
+            @deprecated_args(version="2027.4", reason="r", old_new=[("z", "y")])
+            def method_args(self, x: int) -> list[int]:
+                return [x]
+
+        reveal_type(with_args)
+        reveal_type(Thing().method_args)
+        with_args("not an int")
+        with_args(1, z="a")
+    """)
+    _, output = _run_mypy(code, tmp_path)
+    assert 'Revealed type is "Any"' not in output
+    assert 'Revealed type is "def (x: int, *, y: str =) -> list[int]"' in output
+    assert 'Revealed type is "def (x: int) -> list[int]"' in output
+    assert "[arg-type]" in output
+    assert "[call-arg]" in output
