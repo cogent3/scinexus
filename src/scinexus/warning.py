@@ -8,7 +8,7 @@ from warnings import warn as _warn
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable, Sequence
-    from typing import Any, Literal
+    from typing import Literal
 
 
 def deprecated(
@@ -90,7 +90,7 @@ def deprecated_args(
     old_new: Sequence[tuple[str, str]] | None = None,
     discontinued: Sequence[str] | None = None,
     stack_level: int = 4,
-) -> Callable[..., Any]:
+) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """
     A decorator that marks specific arguments of a function as deprecated.
 
