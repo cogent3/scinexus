@@ -1,7 +1,7 @@
 {
   "name": "scinexus",
   "displayName": "scinexus",
-  "version": "2026.10.26",
+  "version": "2026.11.18",
   "description": "Writing composable, type-checked data pipelines with scinexus: define_app, NotCompleted, data stores, apply_to, parallel backends",
   "author": {
     "name": "The scinexus authors",
